@@ -15,8 +15,19 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang='en'>
+      <head>
+      <link rel="icon" href="assets/icons/logo.svg" type="image/svg+xml"/>
+
+      </head>
+        <body>
+            <div className='login_background_overlay'>
+                {children}
+
+            </div>
+            
+        </body>
+
     </html>
   )
 }
