@@ -8,7 +8,7 @@ export async function GET(request: NextRequest){
     try{
         const allTweets = await Tweet.find().populate({
             path: "userId",
-            select: "_id username displayname"
+            select: "_id username displayname imageName"
     });
 
         return NextResponse.json({

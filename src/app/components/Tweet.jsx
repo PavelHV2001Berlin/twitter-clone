@@ -1,13 +1,24 @@
-import React from 'react'
+import React, {useState}  from 'react'
 import Image from 'next/image'
-const Tweet = ({username, displayname, numberOfLikes, children}) => {
-  return (
+const Tweet = ({username, displayname, numberOfLikes, imageName, children}) => {
+  console.log("IMAGE NAME")
+    console.log(imageName)
+    return (
     <div className='tweet'>
-        <Image className='profile_image' src="/assets/images/testimage.jpg" height={50} width={50} alt='Profilbild'/>
+        {/* <RandomImage/> */}
+        {imageName?
+        (
+        <Image 
+            className='profile_image'
+            src={'/assets/images/'+imageName}
+            height={50} width={50} alt='Profilbild'/>
+        )
+        :(<RandomImage/>)
+        }    
         <div className='tweet_content'>
             <div>
-            <span className='username'>{username}</span>
-            <span className='twitter_tag'>@{displayname}</span>
+            <span className='username'>{displayname}</span>
+            <span className='twitter_tag'>@{username}</span>
             </div>
             <span className='tweet_text'>
                 {children}
@@ -34,5 +45,26 @@ const Tweet = ({username, displayname, numberOfLikes, children}) => {
     </div>
   )
 }
+const imageNames = ['coman.jpg', 'giga.jpg', 'kimmich.jpg', 'thomas.jpg'];
+
+function getRandomIndex(max) {
+    return Math.floor(Math.random() * max);
+}
+
+function RandomImage() {
+    const [randomIndex, setRandomIndex] = useState(getRandomIndex(imageNames.length));
+    /*const newIndex = getRandomIndex(imageNames.length);
+    setRandomIndex(newIndex);
+  */
+    return (
+      <Image
+        className='profile_image'
+        src={`/assets/images/${imageNames[randomIndex]}`}
+        height={50}
+        width={50}
+        alt='Profilbild'
+      />
+    );
+  }
 
 export default Tweet

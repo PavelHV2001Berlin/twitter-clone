@@ -171,7 +171,7 @@ span.twitter_tag{
   border-radius: 25px;
   position: relative;
 }
-div.login_form{
+form.login_form{
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -179,7 +179,7 @@ div.login_form{
   height: 500px;
   width: 500px;
 }
-div.login_form input, button{
+form.login_form input, button{
   width: 70%;
   height: 50px;
   margin: 0 auto;
@@ -191,11 +191,11 @@ a{
   text-align: center;
 }
 
-div.login_form input:focus{
+form.login_form input:focus{
   
 outline: 2px solid rgb(29, 155, 240);
 }
-div.login_form h2{
+form.login_form h2{
   margin: 0 auto;
   width: 70%;
   font-size: 25pt;

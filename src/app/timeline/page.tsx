@@ -73,6 +73,7 @@ const Home = () => {
               username={tweet["userId"]["username"]}
               displayname={tweet["userId"]["displayname"]}
               numberOfLikes={tweet["numberOfLikes"]}
+              imageName={tweet["userId"]["imageName"]}
              >
             {tweet["tweetContent"]}
             </Tweet>

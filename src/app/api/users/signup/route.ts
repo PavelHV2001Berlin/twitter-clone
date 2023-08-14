@@ -3,13 +3,13 @@ import User from '@/models/userModel';
 import { NextRequest, NextResponse } from 'next/server';
 import bcryptjs from "bcryptjs";
 
+
 connect()
 
 export async function POST(request: NextRequest){
     try{
         const reqBody = await request.json()
-        const {username, displayname, email, password} = reqBody
-        console.log(reqBody);
+        const {username, displayname, email, password, imageName} = reqBody
         //Check if user already exists
         const user = await User.findOneAndDelete({email})
 
@@ -19,15 +19,21 @@ export async function POST(request: NextRequest){
         //hash password
         const salt = await bcryptjs.genSalt(10)
         const hashedPassword = await bcryptjs.hash(password, salt)
+
         const newUser = new User({
             username,
             displayname,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            imageName: imageName
         })
 
+
         const savedUser = await newUser.save();
+        console.log("SAVED USER")
         console.log(savedUser);
+        console.log("________________________________IMAGE NAME__________________")
+        console.log(imageName)
         return NextResponse.json({
             message: "User created successfully",
             success: true,
