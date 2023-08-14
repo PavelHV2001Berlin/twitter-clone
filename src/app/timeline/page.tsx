@@ -1,7 +1,44 @@
-import React from 'react'
+"use client";
+import React, {useState, useEffect} from 'react'
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { getDataFromToken } from '@/helpers/getDataFromToken';
+import { toast } from "react-hot-toast";
+import Tweet from '@/app/components/Tweet';
 
 const Home = () => {
+  const [tweetContent, setTweetContent] = useState("");
+  const [allTweets, setAllTweets] = useState([]);
+  useEffect(()=>{
+    const loadTweets = async ()=>{
+      const tweetsResponse = await axios.get("/api/tweets/load_tweets")
+      setAllTweets(tweetsResponse.data.data)
+      console.log("all tweets")
+      console.log(allTweets)
+    
+    }
+    try{
+      loadTweets()
+    }catch(error: any){
+      console.log("Failed to load tweets",error.message);
+      toast.error(error.message);
+    }
+  },[])
+  const postTweet = async ()=>{
+    try{
+      const response = await axios.post("/api/tweets/create_tweet", {tweetContent: tweetContent})
+      console.log("Tweet success", response.data);
+    }
+    catch(error:any){
+      console.log("Tweet failed ",error.message);
+      toast.error(error.message);
+    }
+    finally{
+      setTweetContent("")
+    }
+  }
   return (
     <div className='twitter_timeline'>
        <div className='timeline_header'>
@@ -15,7 +52,7 @@ const Home = () => {
         <div className="create_tweet_container">
           <Image className='profile_image' src="/assets/images/testimage.jpg" height={50} width={50} alt='Profilbild'/>
           <div className='tweet_input_area'>
-            <input placeholder='What is happening?'/>
+            <input placeholder='What is happening?' value={tweetContent} onChange={(e)=>{setTweetContent(e.target.value)}}/>
             <div className='input_actions_container'>
               <div>
                 <svg fill='rgb(29, 155, 240)' xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M180-120q-24 0-42-18t-18-42v-600q0-24 18-42t42-18h600q24 0 42 18t18 42v600q0 24-18 42t-42 18H180Zm0-60h600v-600H180v600Zm56-97h489L578-473 446-302l-93-127-117 152Zm-56 97v-600 600Zm160.118-390Q361-570 375.5-584.618q14.5-14.617 14.5-35.5Q390-641 375.382-655.5q-14.617-14.5-35.5-14.5Q319-670 304.5-655.382q-14.5 14.617-14.5 35.5Q290-599 304.618-584.5q14.617 14.5 35.5 14.5Z"/></svg>
@@ -25,42 +62,25 @@ const Home = () => {
                 <svg fill='rgb(29, 155, 240)' xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M691-80q-78.435 0-133.718-55.283Q502-190.565 502-269q0-78.435 55.282-133.717Q612.565-458 691-458q78.435 0 133.718 55.283Q880-347.435 880-269q0 78.435-55.282 133.717Q769.435-80 691-80Zm58.243-88L777-196l-75-75v-112h-39v126l86.243 89ZM180-120q-24.75 0-42.375-17.625T120-180v-600q0-26 17-43t43-17h202q7-35 34.5-57.5T480-920q36 0 63.5 22.5T578-840h202q26 0 43 17t17 43v308q-15-9-29.516-15.48Q795.968-493.96 780-499v-281h-60v90H240v-90h-60v600h280q5 15 12 29.5t17 30.5H180Zm300-660q17 0 28.5-11.5T520-820q0-17-11.5-28.5T480-860q-17 0-28.5 11.5T440-820q0 17 11.5 28.5T480-780Z"/></svg>
                 <svg fill='rgb(29, 155, 240)' xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M480.089-490Q509-490 529.5-510.589q20.5-20.588 20.5-49.5Q550-589 529.411-609.5q-20.588-20.5-49.5-20.5Q451-630 430.5-609.411q-20.5 20.588-20.5 49.5Q410-531 430.589-510.5q20.588 20.5 49.5 20.5ZM480-159q133-121 196.5-219.5T740-552q0-117.79-75.292-192.895Q589.417-820 480-820t-184.708 75.105Q220-669.79 220-552q0 75 65 173.5T480-159Zm0 79Q319-217 239.5-334.5T160-552q0-150 96.5-239T480-880q127 0 223.5 89T800-552q0 100-79.5 217.5T480-80Zm0-480Z"/></svg>
               </div>
-              <button>Tweet</button>
+              <button className='submit_tweet_btn' onClick={postTweet}>Post</button>
             </div>
           </div>
         </div>
         <div className='tweets_container'>
-          <div className='tweet'>
-            <Image className='profile_image' src="/assets/images/testimage.jpg" height={50} width={50} alt='Profilbild'/>
-            <div className='tweet_content'>
-              <div>
-                <span className='username'>Thomas Müller</span>
-                <span className='twitter_tag'>@EsMüllert</span>
-              </div>
-              <span className='tweet_text'>
-                Contrary to popular belief, Lorem Ipsum is not simply random text.
-                It has roots in a piece of classical Latin literature from 45 BC, mak looked
-              </span>
-              <div className='tweet_interaction_container'>
-                <span>
-                <svg fill='#555' xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M240-240 131-131q-14 14-32.5 6.344T80-152v-668q0-24 18-42t42-18h680q24 0 42 18t18 42v520q0 24-18 42t-42 18H240Zm-100-60h680v-520H140v520Zm0 0v-520 520Z"/></svg>
-                  <span>32</span>
-                </span>
-                <span>
-                <svg fill='#555' xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M481-158q-131 0-225.5-94.5T161-478v-45l-61 61q-8 8-19 8t-19-8q-8-8-8-19.5t8-19.5l108-109q9-9 21-9t21 9l109 109q8 8 8 19t-8 19q-8 8-19.5 8t-19.5-8l-61-60v45q0 107 76.5 183.5T481-218q20 0 39-2.5t36-7.5q12-3 23.5 1.5T596-211q5 11 0 22t-17 15q-24 8-48.5 12t-49.5 4Zm-1-580q-20 0-39 2.5t-36 7.5q-12 3-24-1.5T364-745q-5-11 0-22.5t16-15.5q25-8 49.5-11.5T480-798q131 0 225.5 94.5T800-478v43l61-61q8-8 19-8t19 8q8 8 8 19.5t-8 19.5L791-348q-9 9-21 9t-21-9L641-456q-8-8-8-20t8-20q8-8 20-8t20 8l59 59v-41q0-107-76.5-183.5T480-738Z"/></svg>
-                  <span>44</span>
-                </span>
-                <span>
-                <svg fill='#555' xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M480-140q-10.699 0-21.78-3.869-11.082-3.869-19.488-12.381L386-205Q262-320 171-424.5T80-643q0-90.155 60.5-150.577Q201-854 290-854q51 0 101 24.5t89 80.5q44-56 91-80.5t99-24.5q89 0 149.5 60.423Q880-733.155 880-643q0 114-91 218.5T574-205l-53 49q-8.25 8.381-19.125 12.19Q491-140 480-140Zm-26-543q-27-49-71-80t-93-31q-66 0-108 42.5t-42 108.929q0 57.571 38.881 121.225 38.882 63.654 93 123.5Q326-338 384-286.5q58 51.5 96 86.5 38-34 96-86t112-112.5q54-60.5 93-124.192Q820-586.385 820-643q0-66-42.5-108.5T670-794q-50 0-93.5 30.5T504-683q-5 8-11 11.5t-14 3.5q-8 0-14.5-3.5T454-683Zm26 186Z"/></svg>
-                  <span>633</span>
-                </span>
-                <span>
-                <svg fill="#555" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M110-130q-12.75 0-21.375-8.675Q80-147.351 80-160.175 80-173 88.625-181.5T110-190h740q12.75 0 21.375 8.675 8.625 8.676 8.625 21.5 0 12.825-8.625 21.325T850-130H110Zm59.882-120Q149-250 134.5-264.583 120-279.167 120-300v-170q0-20.833 14.618-35.417Q149.235-520 170.118-520 191-520 205.5-505.417 220-490.833 220-470v170q0 20.833-14.618 35.417Q190.765-250 169.882-250Zm206 0Q355-250 340.5-264.583 326-279.167 326-300v-370q0-20.833 14.618-35.417Q355.235-720 376.118-720 397-720 411.5-705.417 426-690.833 426-670v370q0 20.833-14.618 35.417Q396.765-250 375.882-250Zm207 0Q562-250 547.5-264.583 533-279.167 533-300v-250q0-20.833 14.618-35.417Q562.235-600 583.118-600 604-600 618.5-585.417 633-570.833 633-550v250q0 20.833-14.618 35.417Q603.765-250 582.882-250Zm207 0Q769-250 754.5-264.583 740-279.167 740-300v-490q0-20.833 14.618-35.417Q769.235-840 790.118-840 811-840 825.5-825.417 840-810.833 840-790v490q0 20.833-14.618 35.417Q810.765-250 789.882-250Z"/></svg>                  <span>26.4k</span>
-                </span>
-                <span><svg fill="#555" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M727-80q-47.5 0-80.75-33.346Q613-146.693 613-194.331q0-6.669 1.5-16.312T619-228L316-404q-15 17-37 27.5T234-366q-47.5 0-80.75-33.25T120-480q0-47.5 33.25-80.75T234-594q23 0 44 9t38 26l303-174q-3-7.071-4.5-15.911Q613-757.75 613-766q0-47.5 33.25-80.75T727-880q47.5 0 80.75 33.25T841-766q0 47.5-33.25 80.75T727-652q-23.354 0-44.677-7.5T646-684L343-516q2 8 3.5 18.5t1.5 17.741q0 7.242-1.5 15Q345-457 343-449l303 172q15-14 35-22.5t46-8.5q47.5 0 80.75 33.25T841-194q0 47.5-33.25 80.75T727-80Zm.035-632Q750-712 765.5-727.535q15.5-15.535 15.5-38.5T765.465-804.5q-15.535-15.5-38.5-15.5T688.5-804.465q-15.5 15.535-15.5 38.5t15.535 38.465q15.535 15.5 38.5 15.5Zm-493 286Q257-426 272.5-441.535q15.5-15.535 15.5-38.5T272.465-518.5q-15.535-15.5-38.5-15.5T195.5-518.465q-15.5 15.535-15.5 38.5t15.535 38.465q15.535 15.5 38.5 15.5Zm493 286Q750-140 765.5-155.535q15.5-15.535 15.5-38.5T765.465-232.5q-15.535-15.5-38.5-15.5T688.5-232.465q-15.5 15.535-15.5 38.5t15.535 38.465q15.535 15.5 38.5 15.5ZM727-766ZM234-480Zm493 286Z"/></svg></span>
-              </div>
-            </div>
-          </div>
+          {allTweets.map((tweet, index)=>(
+            <Tweet
+              key={index}
+              username={tweet["userId"]["username"]}
+              displayname={tweet["userId"]["displayname"]}
+              numberOfLikes={tweet["numberOfLikes"]}
+             >
+            {tweet["tweetContent"]}
+            </Tweet>
+          )
+          )}
+         
+        
+          
         </div>
     </div>
    

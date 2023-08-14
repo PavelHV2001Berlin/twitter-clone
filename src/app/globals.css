@@ -32,7 +32,7 @@ main.container{
   grid-template-columns: 1fr 2fr 1fr;
   grid-template-rows: 100%;
   height: 100vh;
-  width: 80%;
+  width: 50%;
   margin: 0 auto;
 }
 nav.container ul > li{
@@ -91,19 +91,29 @@ main .timeline_header .timeline_header_navigation{
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 80px;
+  height: 90px;
 }
 .input_actions_container{
   display: flex;
-  justify-content: space-between;    
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.input_actions_container > div{
+  display: flex;
+  align-items: center;
+  height: 40px;
 }
 .input_actions_container button{
   background-color: rgb(29, 155, 240);
+  width: 100px;
+  height: 40px;
   border: none;
   border-radius: 20px;
   font-weight: bold;
   color: white;
   padding: 10px 20px;
+  margin: 0;
 }
 .tweet{
   height: 100px;
@@ -120,6 +130,7 @@ main .timeline_header .timeline_header_navigation{
   display: flex;
   flex-direction: column;
   gap: 5px;
+  width: 100%;
 }
 .tweet_interaction_container{
   display: flex;
